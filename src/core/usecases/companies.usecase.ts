@@ -23,7 +23,7 @@ export class CompaniesUseCase {
     const regexValidCnpj = /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/;
 
     if (cnpj.match(regexValidCnpj)) {
-      companies = await this.postgresCompaniesRepository.findCompanyByCNPJ(
+      companies = await this.postgresCompaniesRepository.listCompaniesByCNPJ(
         cnpj,
       );
     } else {

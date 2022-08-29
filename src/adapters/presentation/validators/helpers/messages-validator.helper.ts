@@ -9,6 +9,10 @@ export class ValidatorMessages {
     return `Campo "${property}" deve ser uma string.`;
   }
 
+  public static isEnum({ property }: ValidationArguments) {
+    return `Campo "${property}" deve ser um enum.`;
+  }
+
   public static isCNPJ({ property }: ValidationArguments) {
     return `Campo "${property}" deve ser um CNPJ.`;
   }

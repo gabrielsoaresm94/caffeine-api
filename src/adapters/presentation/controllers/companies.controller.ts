@@ -89,7 +89,6 @@ export class CompaniesController {
     const findCompany = await this.companiesUseCase.findCompanyById(
       company.cnpj,
     );
-
     if (findCompany) {
       return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
         message: 'CNPJ já foi cadastrado na plataforma!',
@@ -130,7 +129,7 @@ export class CompaniesController {
   // @ApiOperation({ tags: ['Lojas'], summary: 'Atualiza loja' })
   // updateCompany(@Res() res: Response): Response {
   //   return res.status(HttpStatus.OK).json({
-  //     message: 'Update Company!',
+  //     message: 'Lojas atualizada com sucesso!',
   //   });
   // }
 
@@ -138,7 +137,7 @@ export class CompaniesController {
   // @ApiOperation({ tags: ['Lojas'], summary: 'Remove loja' })
   // removeCompany(@Res() res: Response): Response {
   //   return res.status(HttpStatus.OK).json({
-  //     message: 'Remove Company!',
+  //     message: 'Loja removida com sucesso!',
   //   });
   // }
 }

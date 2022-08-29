@@ -8,4 +8,19 @@ export class UsersUseCase {
     const postUser = await this.postgresUsersRepository.createUser(user);
     return postUser;
   }
+
+  async listUsers(): Promise<User[]> {
+    const users = await this.postgresUsersRepository.listUsers();
+    return users;
+  }
+
+  async findUserByEmail(email: string): Promise<User> {
+    const user = await this.postgresUsersRepository.findUserByEmail(email);
+    return user;
+  }
+
+  async findUserById(id: string): Promise<User> {
+    const company = await this.postgresUsersRepository.findUserById(id);
+    return company;
+  }
 }

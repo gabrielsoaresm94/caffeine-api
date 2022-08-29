@@ -17,12 +17,12 @@ export class PostgresCompaniesRepository {
     return companies;
   }
 
-  async findCompanyByCNPJ(cnpj: string): Promise<Company> {
-    const queryCompany = await client.query(
+  async listCompaniesByCNPJ(cnpj: string): Promise<Company[]> {
+    const queryCompanies = await client.query(
       `SELECT * from companies WHERE cnpj = ${cnpj}`,
     );
-    const company = queryCompany.rows[0] as Company;
-    return company;
+    const companies = queryCompanies.rows as Company[];
+    return companies;
   }
 
   async findCompanyById(id: string): Promise<Company> {
