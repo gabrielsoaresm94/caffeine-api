@@ -87,20 +87,4 @@ export class UsersController {
       data: createUser,
     });
   }
-
-  // @Put(':id')
-  // @ApiOperation({ tags: ['Usuários'], summary: 'Atualiza usuário' })
-  // updateUser(@Res() res: Response): Response {
-  //   return res.status(HttpStatus.OK).json({
-  //     message: 'Usuário atualizado com sucesso!',
-  //   });
-  // }
-
-  // @Delete(':id')
-  // @ApiOperation({ tags: ['Usuários'], summary: 'Remove usuário' })
-  // removeUser(@Res() res: Response): Response {
-  //   return res.status(HttpStatus.OK).json({
-  //     message: 'Usuário removido com sucesso!',
-  //   });
-  // }
 }

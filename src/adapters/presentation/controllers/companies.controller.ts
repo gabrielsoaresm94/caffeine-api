@@ -124,20 +124,4 @@ export class CompaniesController {
       data: createdCompany,
     });
   }
-
-  // @Put(':id')
-  // @ApiOperation({ tags: ['Lojas'], summary: 'Atualiza loja' })
-  // updateCompany(@Res() res: Response): Response {
-  //   return res.status(HttpStatus.OK).json({
-  //     message: 'Lojas atualizada com sucesso!',
-  //   });
-  // }
-
-  // @Delete(':id')
-  // @ApiOperation({ tags: ['Lojas'], summary: 'Remove loja' })
-  // removeCompany(@Res() res: Response): Response {
-  //   return res.status(HttpStatus.OK).json({
-  //     message: 'Loja removida com sucesso!',
-  //   });
-  // }
 }
