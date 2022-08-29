@@ -6,7 +6,7 @@ import {
   IsString,
   Matches,
 } from 'class-validator';
-import { Role } from 'src/shared/guards/role.enum';
+import { Role } from '../../../../shared/guards/role.enum';
 import { ValidatorMessages } from '../helpers/messages-validator.helper';
 
 export class CreateUserValidator {

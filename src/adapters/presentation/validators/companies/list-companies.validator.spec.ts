@@ -1,7 +1,7 @@
 import { validate } from 'class-validator';
 import { ListCompaniesValidator } from './list-companies.validator';
 
-describe('GET: users/:id', () => {
+describe('GET: companies', () => {
   let model: ListCompaniesValidator;
 
   beforeEach(() => {
