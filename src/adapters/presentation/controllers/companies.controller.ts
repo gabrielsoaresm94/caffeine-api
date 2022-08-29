@@ -82,10 +82,19 @@ export class CompaniesController {
     @Res() res: Response,
   ): Promise<Response> {
     const { shopman, ...company } = body;
-
     const companyId = uuid();
     const shopmanId = uuid();
     const shopmanRole = Role.SHOPMAN;
+
+    const findCompany = await this.companiesUseCase.findCompanyById(
+      company.cnpj,
+    );
+
+    if (findCompany) {
+      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+        message: 'CNPJ já foi cadastrado na plataforma!',
+      });
+    }
 
     const shopmanData: IUserData = {
       id: shopmanId,
@@ -112,7 +121,7 @@ export class CompaniesController {
     );
 
     return res.status(HttpStatus.CREATED).json({
-      message: 'Create Company!',
+      message: 'Loja criada com sucesso!',
       data: createdCompany,
     });
   }
