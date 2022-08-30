@@ -1,12 +1,10 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpStatus,
   Param,
   Post,
-  Put,
   Res,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam } from '@nestjs/swagger';
@@ -18,6 +16,7 @@ import { IUserData } from 'src/core/entities/users/user.data';
 import { User } from 'src/core/entities/users/user.entity';
 import { FindUserValidator } from '../validators/users/find-user.validator';
 import { createHash } from 'src/shared/helpers';
+import { Role } from 'src/shared/guards/role.enum';
 
 @Controller('users')
 export class UsersController {
@@ -79,6 +78,13 @@ export class UsersController {
       ...user,
     };
     const userObject = User.create(userData);
+
+    if (userData.role === Role.SHOPMAN || !userData.password) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        message:
+          'Não é permitido criar lojista que não estiver associado à loja!',
+      });
+    }
 
     const createUser = await this.usersUseCase.createUser(userObject);
 
