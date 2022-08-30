@@ -16,5 +16,5 @@ CREATE TABLE Users (
   Email VARCHAR(30) NOT NULL,
   Password VARCHAR(255),
   Phone1 VARCHAR(20) NOT NULL,
-  Phone2 VARCHAR(20),
+  Phone2 VARCHAR(20)
 );

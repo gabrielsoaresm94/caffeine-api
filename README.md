@@ -20,7 +20,7 @@ docker-compose up
 Identificando o `id` do container, é necessário abrir o banco e rodar as queries, que estão presentes dentro do arquivo `queries.sql`:
 ```
 docker ps
-docker exec -ti {docker_id} psql -d {db_name} -U {user}
+docker exec -ti {docker_id} psql -d {database_name} -U {DB_USER}
 ```
 
 ## Como instalar
