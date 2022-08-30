@@ -12,6 +12,7 @@ import { CompaniesUseCase } from '../../../core/usecases/companies.usecase';
 import { FakeCompaniesRepository } from '../../../infra/database/fake/repositories/companies.repository';
 import { PostgresCompaniesRepository } from '../../../infra/database/postgres/repositories/companies.repository';
 import { ListCompaniesValidator } from '../validators/companies/list-companies.validator';
+import { CreateCompanyValidator } from '../validators/companies/create-company.validator';
 
 describe('CompaniesController', () => {
   let companiesController: CompaniesController;
@@ -35,79 +36,88 @@ describe('CompaniesController', () => {
      * que está sendo enviado para a controller. Aparentemente ela recebe uma requisição inteira
      * e não apenas o corpo tipado.
      */
-    // it('Best way to create company', async () => {
-    //   const result: ICompanyData = {
-    //     id: uuid(),
-    //     name: 'Sicrano',
-    //     role: Role.MANAGER,
-    //     email: 'sicrano@email.com',
-    //     password: await createHash('1234'),
-    //     phone_1: '(71)999999997',
-    //     phone_2: null,
-    //   };
+    it('Best way to create company', async () => {
+      const result: ICompanyData = {
+        id: uuid(),
+        cnpj: '04.646.343/0001-89',
+        socialReason: 'Loja do Fulano LTDA',
+        name: 'Loja do Fulano',
+        email: 'loja@fulano.com',
+        phone: '(71)999999998',
+        information: 'Essas são as informações da Loja do Fulano',
+        shopmanId: uuid(),
+      };
 
-    //   const body: CreateUserValidator = {
-    //     name: 'Sicrano',
-    //     role: Role.MANAGER,
-    //     email: 'sicrano@email.com',
-    //     password: 'test',
-    //     phone_1: '(71)999999997',
-    //   };
+      const body: CreateCompanyValidator = {
+        cnpj: '04646343000189',
+        name: 'Loja do Fulano',
+        socialReason: 'Loja do Fulano LTDA',
+        email: 'loja@fulano.com',
+        phone: '(71)999999998',
+        information: 'Essas são as informações da Loja do Fulano',
+        shopman: {
+          name: 'Fulano',
+          email: 'fulano@email.com',
+          phone_1: '(71)999999999',
+        },
+      };
 
-    //   const request: any = createRequest({
-    //     method: 'POST',
-    //     url: '/users',
-    //     body: body,
-    //   });
+      const request: any = createRequest({
+        method: 'POST',
+        url: '/companies',
+        body: body,
+      });
 
-    //   jest
-    //     .spyOn(usersUseCase, 'createUser')
-    //     .mockImplementation(async () => result);
+      jest
+        .spyOn(companiesUseCase, 'createCompany')
+        .mockImplementation(async () => result);
 
-    //   const response = createResponse();
-    //   await usersController.createUser(request, response);
-    //   const data = await response._getJSONData();
+      const response = createResponse();
+      await companiesController.createCompany(request, response);
+      const status = response._getStatusCode();
 
-    //   expect(data.data).toMatchObject(result);
-    // });
+      expect(status).toBe(200);
+    });
 
-    // it('Best way to list companies', async () => {
-    //   const result: ICompanyData[] = [
-    //     {
-    //       id: uuid(),
-    //       cnpj: '04.646.343/0001-89',
-    //       socialReason: 'Loja do Fulano LTDA',
-    //       name: 'Loja do Fulano',
-    //       email: 'loja@fulano.com',
-    //       phone: '(71)999999998',
-    //       information: 'Essas são as informações da Loja do Fulano',
-    //       shopmanId: uuid(),
-    //     },
-    //   ];
+    /**
+     * PROBLEMAS - este teste está dando problema com o request, mockado,
+     * que está sendo enviado para a controller. Aparentemente ela recebe uma requisição inteira
+     * e não apenas o corpo tipado.
+     */
+    it('Best way to list companies', async () => {
+      const result: ICompanyData[] = [
+        {
+          id: uuid(),
+          cnpj: '04.646.343/0001-89',
+          socialReason: 'Loja do Fulano LTDA',
+          name: 'Loja do Fulano',
+          email: 'loja@fulano.com',
+          phone: '(71)999999998',
+          information: 'Essas são as informações da Loja do Fulano',
+          shopmanId: uuid(),
+        },
+      ];
 
-    //   const query: ListCompaniesValidator = {
-    //     cnpj: '04.646.343/0001-89',
-    //   };
+      const query: ListCompaniesValidator = {
+        cnpj: '04646343000189',
+      };
 
-    //   const request: any = createRequest({
-    //     method: 'GET',
-    //     url: '/companies',
-    //     query: query,
-    //   });
+      const request: any = createRequest({
+        method: 'GET',
+        url: '/companies',
+        query: query,
+      });
 
-    //   jest
-    //     .spyOn(companiesUseCase, 'listCompanies')
-    //     .mockImplementation(async () => result);
+      jest
+        .spyOn(companiesUseCase, 'listCompanies')
+        .mockImplementation(async () => result);
 
-    //   const response = createResponse();
-    //   await companiesController.listCompanies(request, response);
+      const response = createResponse();
+      await companiesController.listCompanies(request, response);
+      const status = response._getStatusCode();
 
-    //   // const data = await response._getJSONData();
-    //   const status = response._getStatusCode();
-
-    //   // expect(data.data).toMatchObject(result);
-    //   expect(status).toBe(200);
-    // });
+      expect(status).toBe(200);
+    });
 
     it('Best way to find company by id', async () => {
       const result: ICompanyData = {
