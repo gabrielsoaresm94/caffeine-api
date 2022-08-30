@@ -9,13 +9,3 @@ import { PostgresUsersRepository } from '../database/postgres/repositories/users
   providers: [UsersUseCase, PostgresUsersRepository],
 })
 export class UsersModule {}
-
-// @Module({
-//   imports: [],
-//   controllers: [UsersController],
-//   providers: [
-//     UsersUseCases,
-//     { provide: IUsersRepository, useClass: UsersRepository },
-//   ],
-// })
-// export class UsersModule {}

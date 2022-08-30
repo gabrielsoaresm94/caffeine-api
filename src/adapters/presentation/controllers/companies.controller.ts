@@ -67,6 +67,13 @@ export class CompaniesController {
 
     const company = await this.companiesUseCase.findCompanyById(id);
 
+    if (!company) {
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: 'Loja não encontrada',
+        data: company,
+      });
+    }
+
     return res.status(HttpStatus.OK).json({
       message: 'Loja encontrada com sucesso!',
       data: company,

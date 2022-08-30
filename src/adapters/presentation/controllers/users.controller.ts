@@ -10,13 +10,13 @@ import {
 import { ApiOperation, ApiParam } from '@nestjs/swagger';
 import { Response } from 'express';
 import { v4 as uuid } from 'uuid';
-import { UsersUseCase } from 'src/core/usecases/user.usecase';
+import { UsersUseCase } from '../../../core/usecases/user.usecase';
 import { CreateUserValidator } from '../validators/users/create-user.validator';
-import { IUserData } from 'src/core/entities/users/user.data';
-import { User } from 'src/core/entities/users/user.entity';
+import { IUserData } from '../../../core/entities/users/user.data';
+import { User } from '../../../core/entities/users/user.entity';
 import { FindUserValidator } from '../validators/users/find-user.validator';
-import { createHash } from 'src/shared/helpers';
-import { Role } from 'src/shared/guards/role.enum';
+import { createHash } from '../../../shared/helpers';
+import { Role } from '../../../shared/guards/role.enum';
 
 @Controller('users')
 export class UsersController {
@@ -45,8 +45,14 @@ export class UsersController {
     @Res() res: Response,
   ): Promise<Response> {
     const { id } = params;
-
     const user = await this.usersUseCase.findUserById(id);
+
+    if (!user) {
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: 'Usuário não encontrado',
+        data: user,
+      });
+    }
 
     return res.status(HttpStatus.OK).json({
       message: 'Usuário encontrado com sucesso!',

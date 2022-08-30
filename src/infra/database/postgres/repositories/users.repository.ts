@@ -1,35 +1,36 @@
-import { User } from 'src/core/entities/users/user.entity';
+import { IUserData } from '../../../../core/entities/users/user.data';
+import { User } from '../../../../core/entities/users/user.entity';
 import client from '../client';
 
 export class PostgresUsersRepository {
-  async createUser(user: User): Promise<User> {
+  async createUser(user: User): Promise<IUserData> {
     const data = user.toPlain();
     const postUser = await client.query(
       `INSERT INTO users (Id, Name, Role, Email, Password, Phone1, Phone2) VALUES (${data.id},'${data.name}','${data.role}', '${data.email}','${data.password}', '${data.phone_1}', '${data.phone_2}') RETURNING *`,
     );
-    const userSaved = postUser.rows[0] as User;
+    const userSaved = postUser.rows[0] as IUserData;
     return userSaved;
   }
 
-  async listUsers(): Promise<User[]> {
+  async listUsers(): Promise<IUserData[]> {
     const queryUsers = await client.query('SELECT * from users');
-    const users = queryUsers.rows as User[];
+    const users = queryUsers.rows as IUserData[];
     return users;
   }
 
-  async findUserByEmail(email: string): Promise<User> {
+  async findUserByEmail(email: string): Promise<IUserData> {
     const queryUser = await client.query(
       `SELECT * FROM users WHERE email = ${email}`,
     );
-    const user = queryUser.rows[0] as User;
+    const user = queryUser.rows[0] as IUserData;
     return user;
   }
 
-  async findUserById(id: string): Promise<User> {
+  async findUserById(id: string): Promise<IUserData> {
     const queryUser = await client.query(
       `SELECT * FROM users WHERE id = ${id}`,
     );
-    const user = queryUser.rows[0] as User;
+    const user = queryUser.rows[0] as IUserData;
     return user;
   }
 }
