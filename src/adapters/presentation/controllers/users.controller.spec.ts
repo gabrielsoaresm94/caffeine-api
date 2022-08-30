@@ -87,23 +87,16 @@ describe('UsersController', () => {
       expect(data.data[0]).toMatchObject(result[0]);
     });
 
-    /**
-     * PROBLEMAS - este teste está dando problema com o request, mockado,
-     * que está sendo enviado para a controller. Aparentemente ela recebe uma requisição inteira
-     * e não apenas os params.
-     */
     it('Best way to find user by id', async () => {
-      const result: IUserData[] = [
-        {
-          id: uuid(),
-          name: 'Sicrano',
-          role: Role.MANAGER,
-          email: 'sicrano@email.com',
-          password: await createHash('1234'),
-          phone_1: '(71)999999997',
-          phone_2: null,
-        },
-      ];
+      const result: IUserData = {
+        id: uuid(),
+        name: 'Sicrano',
+        role: Role.MANAGER,
+        email: 'sicrano@email.com',
+        password: await createHash('1234'),
+        phone_1: '(71)999999997',
+        phone_2: null,
+      };
 
       const params: FindUserValidator = {
         id: uuid(),
@@ -116,11 +109,13 @@ describe('UsersController', () => {
       });
 
       jest
-        .spyOn(usersUseCase, 'listUsers')
+        .spyOn(usersUseCase, 'findUserById')
         .mockImplementation(async () => result);
 
       const response = createResponse();
       await usersController.findUser(request, response);
+      const c = await response._getData();
+      console.log(c, 5000);
       const status = response._getStatusCode();
 
       expect(status).toBe(200);
