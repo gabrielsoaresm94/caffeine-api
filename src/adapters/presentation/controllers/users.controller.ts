@@ -7,7 +7,7 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import { UsersUseCase } from '../../../core/usecases/user.usecase';
