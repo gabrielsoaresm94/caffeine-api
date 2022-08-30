@@ -2,12 +2,14 @@ import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { Response } from 'express';
 import { v4 as uuid } from 'uuid';
+import { sign } from 'jsonwebtoken';
 import { UsersUseCase } from 'src/core/usecases/user.usecase';
-import { createHash } from 'src/shared/helpers';
+import { createHash, compareHash } from 'src/shared/helpers';
 import { IUserData } from 'src/core/entities/users/user.data';
 import { Role } from 'src/shared/guards/role.enum';
 import { User } from 'src/core/entities/users/user.entity';
 import { CreateManagerValidator } from '../validators/users/create-manager.validator';
+import authConfig from 'src/shared/guards/auth';
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +31,7 @@ export class AuthController {
       });
     }
 
-    manager.password = await createHash(manager.password);
+    manager.password = await createHash(manager.password.toString());
 
     const userData: IUserData = {
       id: managerId,
@@ -49,9 +51,44 @@ export class AuthController {
 
   @Post('signin')
   @ApiOperation({ tags: ['Autenticação'], summary: 'Login' })
-  signIn(@Res() res: Response): Response {
+  async signIn(
+    @Body()
+    body: {
+      email: string;
+      password: string;
+    },
+    @Res() res: Response,
+  ): Promise<Response> {
+    const email = body.email;
+    const password = body.password.toString();
+
+    const findUser = await this.usersUseCase.findUserByEmail(email);
+    if (!findUser) {
+      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+        message: 'Email ou senha incorretos 1!',
+      });
+    }
+
+    const passwordMatched = await compareHash(password, findUser.password);
+    if (passwordMatched === false) {
+      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+        message: 'Email ou senha incorretos 2!',
+      });
+    }
+
+    const { secret, expiresIn } = authConfig.jwt;
+
+    const token = sign({}, secret, {
+      subject: findUser.id,
+      expiresIn,
+    });
+
     return res.status(HttpStatus.OK).json({
       message: 'Login!',
+      data: {
+        user: findUser,
+        token: token,
+      },
     });
   }
 }
