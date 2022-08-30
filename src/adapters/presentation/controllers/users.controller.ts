@@ -76,21 +76,20 @@ export class UsersController {
       });
     }
 
-    user.password = await createHash(user.password);
+    if (user.role === Role.SHOPMAN || !user.password) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        message:
+          'Não é permitido criar lojista que não estiver associado à loja!',
+      });
+    }
 
+    user.password = await createHash(user.password.toString());
     const userData: IUserData = {
       id: userId,
       phone_2: user.phone_2 || null,
       ...user,
     };
     const userObject = User.create(userData);
-
-    if (userData.role === Role.SHOPMAN || !userData.password) {
-      return res.status(HttpStatus.FORBIDDEN).json({
-        message:
-          'Não é permitido criar lojista que não estiver associado à loja!',
-      });
-    }
 
     const createUser = await this.usersUseCase.createUser(userObject);
 

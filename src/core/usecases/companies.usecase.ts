@@ -1,9 +1,11 @@
-import { PostgresCompaniesRepository } from 'src/infra/database/postgres/repositories/companies.repository';
-import { PostgresUsersRepository } from 'src/infra/database/postgres/repositories/users.repository';
+import { Injectable } from '@nestjs/common';
+import { PostgresCompaniesRepository } from '../../infra/database/postgres/repositories/companies.repository';
+import { PostgresUsersRepository } from '../../infra/database/postgres/repositories/users.repository';
 import { ICompanyData } from '../entities/companies/company.data';
 import { Company } from '../entities/companies/company.entity';
 import { User } from '../entities/users/user.entity';
 
+@Injectable()
 export class CompaniesUseCase {
   constructor(
     private postgresCompaniesRepository: PostgresCompaniesRepository,

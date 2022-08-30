@@ -1,7 +1,9 @@
-import { PostgresUsersRepository } from 'src/infra/database/postgres/repositories/users.repository';
+import { Injectable } from '@nestjs/common';
+import { PostgresUsersRepository } from '../../infra/database/postgres/repositories/users.repository';
 import { IUserData } from '../entities/users/user.data';
 import { User } from '../entities/users/user.entity';
 
+@Injectable()
 export class AuthUseCase {
   constructor(private postgresUsersRepository: PostgresUsersRepository) {}
 

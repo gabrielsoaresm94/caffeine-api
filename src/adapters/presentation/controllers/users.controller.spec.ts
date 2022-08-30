@@ -114,8 +114,6 @@ describe('UsersController', () => {
 
       const response = createResponse();
       await usersController.findUser(request, response);
-      const c = await response._getData();
-      console.log(c, 5000);
       const status = response._getStatusCode();
 
       expect(status).toBe(200);
