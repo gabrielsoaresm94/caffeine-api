@@ -11,6 +11,4 @@ export class AuthUseCase {
     const postUser = await this.postgresUsersRepository.createUser(user);
     return postUser;
   }
-
-  async signIn() {}
 }
