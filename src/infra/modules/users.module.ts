@@ -20,10 +20,10 @@ export class UsersModule {
         path: 'users/:id',
         method: RequestMethod.GET,
       },
-      // {
-      //   path: 'users',
-      //   method: RequestMethod.POST,
-      // },
+      {
+        path: 'users',
+        method: RequestMethod.POST,
+      },
     );
   }
 }

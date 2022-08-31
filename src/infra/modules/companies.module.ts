@@ -25,10 +25,10 @@ export class CompaniesModule {
         path: 'companies/:id',
         method: RequestMethod.GET,
       },
-      // {
-      //   path: 'companies',
-      //   method: RequestMethod.POST,
-      // },
+      {
+        path: 'companies',
+        method: RequestMethod.POST,
+      },
     );
   }
 }
