@@ -17,7 +17,6 @@ import { IUserData } from '../../../core/entities/users/user.data';
 import { User } from '../../../core/entities/users/user.entity';
 import { CompaniesUseCase } from '../../../core/usecases/companies.usecase';
 import { Role } from '../../../shared/guards/role.enum';
-import { Roles } from '../../../shared/guards/roles.decorator';
 import { CreateCompanyValidator } from '../validators/companies/create-company.validator';
 import { FindCompanyValidator } from '../validators/companies/find-company.validator';
 import { ListCompaniesValidator } from '../validators/companies/list-companies.validator';
@@ -27,7 +26,6 @@ export class CompaniesController {
   constructor(private readonly companiesUseCase: CompaniesUseCase) {}
 
   @Get()
-  @Roles(Role.ADMIN, Role.MANAGER)
   @ApiQuery({
     name: 'cnpj',
     required: false,
@@ -38,13 +36,24 @@ export class CompaniesController {
     @Query() query: ListCompaniesValidator,
     @Res() res: Response,
   ): Promise<Response> {
-    const { cnpj } = query;
+    let cnpj: string | undefined = query.cnpj || undefined;
 
-    const cnpjFormatted = cnpj.replace(
-      /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-      '$1.$2.$3/$4-$5',
-    );
-    const companies = await this.companiesUseCase.listCompanies(cnpjFormatted);
+    if (cnpj) {
+      cnpj = cnpj.replace(
+        /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+        '$1.$2.$3/$4-$5',
+      );
+    }
+
+    let companies = await this.companiesUseCase.listCompanies(cnpj);
+    if (cnpj && companies.length > 0) {
+      const user = await this.companiesUseCase.findUserByIdByCompany(
+        companies[0]['shopmanid'],
+      );
+      const company = { ...companies[0], shopman: user };
+      delete company['shopmanid'];
+      companies = [company];
+    }
 
     return res.status(HttpStatus.OK).json({
       message: 'Lojas listadas com sucesso!',
@@ -91,10 +100,14 @@ export class CompaniesController {
     const shopmanId = uuid();
     const shopmanRole = Role.SHOPMAN;
 
-    const findCompany = await this.companiesUseCase.findCompanyById(
-      company.cnpj,
+    const cnpjFormatted = company.cnpj.replace(
+      /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+      '$1.$2.$3/$4-$5',
     );
-    if (findCompany) {
+    const findCompany = await this.companiesUseCase.listCompanies(
+      cnpjFormatted,
+    );
+    if (findCompany.length > 0) {
       return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
         message: 'CNPJ já foi cadastrado na plataforma!',
       });
@@ -113,6 +126,7 @@ export class CompaniesController {
       id: companyId,
       shopmanId: shopmanObject.toPlain().id,
       ...company,
+      cnpj: cnpjFormatted,
     };
     const companyObject = Company.create(
       companyData,

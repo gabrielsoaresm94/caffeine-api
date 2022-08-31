@@ -13,6 +13,7 @@ import { FakeCompaniesRepository } from '../../../infra/database/fake/repositori
 import { PostgresCompaniesRepository } from '../../../infra/database/postgres/repositories/companies.repository';
 import { ListCompaniesValidator } from '../validators/companies/list-companies.validator';
 import { CreateCompanyValidator } from '../validators/companies/create-company.validator';
+import { IUserData } from '../../../core/entities/users/user.data';
 
 describe('CompaniesController', () => {
   let companiesController: CompaniesController;
@@ -85,7 +86,18 @@ describe('CompaniesController', () => {
      * e não apenas o corpo tipado.
      */
     it('Best way to list companies', async () => {
-      const result: ICompanyData[] = [
+      const result:
+        | ICompanyData[]
+        | {
+            id: string;
+            cnpj: string;
+            name: string;
+            socialReason: string;
+            email: string;
+            phone: string;
+            information: string;
+            shopman: IUserData;
+          }[] = [
         {
           id: uuid(),
           cnpj: '04.646.343/0001-89',
@@ -98,14 +110,14 @@ describe('CompaniesController', () => {
         },
       ];
 
-      const query: ListCompaniesValidator = {
-        cnpj: '04646343000189',
-      };
+      // const query: ListCompaniesValidator = {
+      //   cnpj: '04646343000189',
+      // };
 
       const request: any = createRequest({
         method: 'GET',
         url: '/companies',
-        query: query,
+        // query: query,
       });
 
       jest

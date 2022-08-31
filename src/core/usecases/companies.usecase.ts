@@ -3,6 +3,7 @@ import { PostgresCompaniesRepository } from '../../infra/database/postgres/repos
 import { PostgresUsersRepository } from '../../infra/database/postgres/repositories/users.repository';
 import { ICompanyData } from '../entities/companies/company.data';
 import { Company } from '../entities/companies/company.entity';
+import { IUserData } from '../entities/users/user.data';
 import { User } from '../entities/users/user.entity';
 
 @Injectable()
@@ -23,9 +24,7 @@ export class CompaniesUseCase {
 
   async listCompanies(cnpj?: string): Promise<ICompanyData[]> {
     let companies: ICompanyData[];
-    const regexValidCnpj = /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/;
-
-    if (cnpj.match(regexValidCnpj)) {
+    if (cnpj) {
       companies = await this.postgresCompaniesRepository.listCompaniesByCNPJ(
         cnpj,
       );
@@ -39,5 +38,10 @@ export class CompaniesUseCase {
   async findCompanyById(id: string): Promise<ICompanyData> {
     const company = await this.postgresCompaniesRepository.findCompanyById(id);
     return company;
+  }
+
+  async findUserByIdByCompany(id: string): Promise<IUserData> {
+    const user = await this.postgresUsersRepository.findUserById(id);
+    return user;
   }
 }
